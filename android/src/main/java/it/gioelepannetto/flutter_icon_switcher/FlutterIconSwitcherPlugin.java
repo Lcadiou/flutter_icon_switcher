@@ -87,7 +87,6 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
   public void updateIcon(@NonNull String name) {
 
     // Get the packageName of the app
-    //String packageName = context.getPackageName();
     String packageName = "com.example.valwin_app";
 
     // Get the class name of the activity-alias
@@ -97,14 +96,6 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
 
     PackageManager pm = context.getPackageManager();
 
-    Log.d(TAG, "Package name from context:");
-    Log.d(TAG, context.getPackageName());
-
-    Log.d(TAG, "className name:");
-    Log.d(TAG, className);
-
-    
-    Log.d(TAG, "Step1:");
     pm.setComponentEnabledSetting(
             new ComponentName(context.getPackageName(), className),
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
@@ -112,11 +103,7 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
     );
 
     for(ActivityInfo activity: oldName) {
-      
-      Log.d(TAG, "Step2 : ActivityName:" + activity.name + ", classname: " + className);
       if(!activity.name.equals(className)) {
-        
-        Log.d(TAG, "Step3 : ActivityName:" + activity.name + ", classname: " + className);
         pm.setComponentEnabledSetting(
                 new ComponentName(context.getPackageName(), activity.name),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
@@ -148,13 +135,12 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
     );
-    if (oldName != null) {
-      pm.setComponentEnabledSetting(
-              new ComponentName(context.getPackageName(), oldClassName),
-              PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-              PackageManager.DONT_KILL_APP
-      );
-    }
+    
+    pm.setComponentEnabledSetting(
+            new ComponentName(context.getPackageName(), oldClassName),
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+    );
   }
 
 
