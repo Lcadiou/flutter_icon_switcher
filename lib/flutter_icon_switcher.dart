@@ -32,8 +32,10 @@ class FlutterIconSwitcher {
 
   /// Reset the icon to the original state.
   /// Simply this method does the same of [FlutterIconSwitcher.updateIcon] but pass "DEFAULT" as configuration name
-  static Future<void> resetIcon() async {
-    await _channel.invokeMethod('resetIcon');
+  static Future<void> resetIcon(String oldName) async {
+    Map<String,dynamic> data = {
+      'oldName': oldName,
+    };
+    await _channel.invokeMethod('resetIcon', data);
   }
-
 }

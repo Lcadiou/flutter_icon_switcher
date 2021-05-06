@@ -71,7 +71,8 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
         break;
       case "resetIcon":
         try {
-          resetIcon();
+          String data = call.argument("oldName");
+          resetIcon(data);
           result.success(true);
         } catch (Exception e) {
           e.printStackTrace();
@@ -86,7 +87,8 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
   public void updateIcon(@NonNull String name) {
 
     // Get the packageName of the app
-    String packageName = context.getPackageName();
+    //String packageName = context.getPackageName();
+    String packageName = "com.example.valwin_app";
 
     // Get the class name of the activity-alias
     String className = String.format("%s.%s", packageName, name);
@@ -95,16 +97,28 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
 
     PackageManager pm = context.getPackageManager();
 
+    Log.d(TAG, "Package name from context:");
+    Log.d(TAG, context.getPackageName());
+
+    Log.d(TAG, "className name:");
+    Log.d(TAG, className);
+
+    
+    Log.d(TAG, "Step1:");
     pm.setComponentEnabledSetting(
-            new ComponentName(packageName, className),
+            new ComponentName(context.getPackageName(), className),
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
     );
 
     for(ActivityInfo activity: oldName) {
+      
+      Log.d(TAG, "Step2 : ActivityName:" + activity.name + ", classname: " + className);
       if(!activity.name.equals(className)) {
+        
+        Log.d(TAG, "Step3 : ActivityName:" + activity.name + ", classname: " + className);
         pm.setComponentEnabledSetting(
-                new ComponentName(packageName, activity.name),
+                new ComponentName(context.getPackageName(), activity.name),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP
         );
@@ -112,9 +126,9 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
     }
   }
 
-  public void resetIcon() {
+  public void resetIcon(@NonNull String oldName) {
     // Get the packageName of the app
-    String packageName = context.getPackageName();
+    String packageName = "com.example.valwin_app";
 
     // Get the default class name of the activity-alias
     String defaultClassName = String.format("%s.%s", packageName, "MainActivity");
@@ -123,25 +137,24 @@ public class FlutterIconSwitcherPlugin implements FlutterPlugin, MethodCallHandl
     PackageManager pm = context.getPackageManager();
 
     // ActivityInfo oldActivity = getEnabledComponent();
-    String oldClassName = String.format("%s.%s", packageName, "ALT");
+    String oldClassName = String.format("%s.%s", packageName, oldName);
 
     /*if (oldActivity.name.contains("DEFAULT")) {
       return;
     }*/
 
     pm.setComponentEnabledSetting(
-            new ComponentName(packageName, defaultClassName),
+            new ComponentName(context.getPackageName(), defaultClassName),
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
     );
-
-    pm.setComponentEnabledSetting(
-            new ComponentName(packageName, oldClassName),
-            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-            PackageManager.DONT_KILL_APP
-    );
-
-
+    if (oldName != null) {
+      pm.setComponentEnabledSetting(
+              new ComponentName(context.getPackageName(), oldClassName),
+              PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+              PackageManager.DONT_KILL_APP
+      );
+    }
   }
 
 
